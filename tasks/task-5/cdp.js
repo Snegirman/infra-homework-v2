@@ -42,8 +42,16 @@ async function test() {
     await Page.loadEventFired();
     await DOM.enable();
 
+    const doc = await DOM.getDocument();
+    const nodeId = doc.root.nodeId;
+    const elem = await DOM.querySelector({
+      nodeId,
+      selector: "#root",
+    });
+    const outerElem = await DOM.getOuterHTML({ nodeId: elem.nodeId });
+
     // Здесь нужно получить содержимое элемента #root
-    const result = '???';
+    const result = outerElem.outerHTML.slice(outerElem.outerHTML.indexOf('>') + 1, outerElem.outerHTML.lastIndexOf('<'));
 
     assert.equal(result, expected);
   } catch (err) {

@@ -1,0 +1,30 @@
+application:
+  name: 'frontend-app'
+  version: '2.0.1'
+  enabled: true
+  limits:
+    cpu: 1.5
+    memory: 512
+  servers:
+    - host: 'localhost'
+      ports: [3000, 3001]
+      ssl:
+        enabled: false
+        cert: null
+    - host: 'prod.example.com'
+      ports: [80, 443]
+      ssl:
+        enabled: true
+        cert: '/etc/ssl/cert.pem'
+  features:
+    auth:
+      enabled: true
+      providers: ['google', 'github']
+    experiments:
+      enabled: false
+      variants: []
+
+  meta:
+    createdAt: '2025-01-01'
+    owner: null
+    tags: ['stable', 'v2']

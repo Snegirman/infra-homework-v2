@@ -1,0 +1,33 @@
+name: task-8
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    types: [opened]
+    paths-ignore:
+      - '**/*.md'
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['22', '24']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+      - name: install
+        run: |
+          corepack enable
+          yarn install --immutable
+      - name: lint
+        run: yarn lint
+      - name: build
+        run: yarn build
+      - name: test
+        run: yarn test

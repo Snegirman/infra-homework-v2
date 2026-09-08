@@ -1,0 +1,13 @@
+services:
+  service:
+    build: ./
+    networks:
+      network_name:
+  nginx:
+    build: ./nginx
+    networks:
+      network_name:
+    ports:
+      - "3030:3030"
+networks:
+  network_name:

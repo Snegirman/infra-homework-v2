@@ -46,7 +46,7 @@ lint:
 
 build:
   stage: build
-  script: yarn build
+  script: yarn build:assets
   needs:
     - install
   cache:
@@ -56,6 +56,9 @@ build:
       prefix: $CI_JOB_NAME
     paths:
       - node_modules/
+  artifacts:
+    paths:
+      - tasks/task-17/dist/
 
 test:
   stage: test
@@ -77,16 +80,13 @@ test:
       - NODE_VERSION: ["22", "24"]
 
 deploy:
+  image:
+    name: amazon/aws-cli
+    entrypoint:
+      - ""
   stage: deploy
-  script: yarn deploy
+  script: aws s3 cp tasks/task-17/dist s3://infra-2/$GITLAB_USER_LOGIN/ --recursive --endpoint-url https://storage.yandexcloud.net --region ru-central1
   when: manual
   needs:
-    - install
     - test
-  cache:
-    key:
-      files:
-        - yarn.lock
-      prefix: $CI_JOB_NAME
-    paths:
-      - node_modules/
+    - build

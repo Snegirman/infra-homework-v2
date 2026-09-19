@@ -1,4 +1,4 @@
-import { Worker } from "node:worker_threads";
+import { Worker } from 'node:worker_threads';
 import path from "node:path";
 import assert from "node:assert";
 
@@ -9,7 +9,19 @@ import assert from "node:assert";
  */
 
 function workerCalculate(a, b) {
-  // TODO
+  const dirPath = path.join(import.meta.dirname, "./worker.js")
+
+
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(dirPath);
+    worker.on("message", (msg) => {
+      resolve(msg);
+    })
+    worker.on("error", (err) => {
+      reject(err);
+    })
+    worker.postMessage({ a, b })
+  })
 }
 
 assert.equal(await workerCalculate(5, 5), 10);

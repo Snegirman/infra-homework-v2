@@ -13,7 +13,20 @@ import assert from "node:assert";
  */
 
 function calcuateHash(filePath) {
-  // TODO
+  return new Promise((resolve, reject) => {
+    const stream = fs.createReadStream(filePath, { highWaterMark: 16*1024 });
+    const hash = crypto.createHash("sha256")
+    stream.on("data", chunk => {
+      hash.update(chunk)
+    })
+    stream.on("end", () => {
+      const res = hash.digest("hex")
+      resolve(res)
+    })
+    stream.on("error", (error) => {
+      reject(error)
+    })
+  })
 }
 
 const filePath = path.join(import.meta.dirname, "./data.json");

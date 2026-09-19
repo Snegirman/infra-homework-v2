@@ -14,7 +14,31 @@ import assert from "node:assert";
  */
 
 function walk(root) {
-  // TODO
+  let fileCounter = 0;
+  let dirCounter = 0;
+  let sizeCounter = 0;
+  let largest = [];
+  const entries = fs.readdirSync(root, { withFileTypes: true });
+  for (const item of entries) {
+    const fullPath = path.join(root, item.name);
+    if (item.isDirectory()) {
+      const { files, dirs, totalSize, largest: newLargest} =  walk(fullPath);
+      dirCounter += dirs + 1;
+      fileCounter += files;
+      sizeCounter += totalSize
+      largest = [...largest, ...newLargest];
+    } else if (item.isFile()) {
+      fileCounter += 1
+      const size = fs.statSync(fullPath).size
+      sizeCounter += size
+      largest.push({
+        path: fullPath,
+        size
+      })
+    }
+    largest = largest.sort((a, b) => b.size - a.size).slice(0, 3)
+  }
+  return { files: fileCounter, dirs: dirCounter, totalSize: sizeCounter, largest };
 }
 
 const root = path.join(import.meta.dirname, "./src");

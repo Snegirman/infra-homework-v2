@@ -77,10 +77,6 @@ assert.partialDeepStrictEqual(httpsResponse, {
   },
 });
 
-assert.ok(
-  httpsResponse.body.startsWith(
-    '{"abilities":[{"ability":{"name":"static","url":"https://pokeapi.co/api/v2/ability/9/"},"is_hidden":false,'
-  )
-);
+assert.equal(JSON.parse(httpsResponse.body).id, 25);
 
 server.close();

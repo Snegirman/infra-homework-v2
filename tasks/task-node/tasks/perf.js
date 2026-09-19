@@ -9,7 +9,20 @@ import assert from "node:assert";
 const performanceMetrics = {};
 
 function initObserver() {
-  // TODO
+  const observer = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      const { duration, fetchStart, requestStart, responseEnd, decodedBodySize } = entry;
+
+      Object.assign(performanceMetrics, {
+        duration,
+        fetchStart,
+        requestStart,
+        responseEnd,
+        decodedBodySize,
+      });
+    }
+  })
+  observer.observe({ entryTypes: ["resource"] });
 }
 
 initObserver();

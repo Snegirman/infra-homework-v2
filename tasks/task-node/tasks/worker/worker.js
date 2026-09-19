@@ -8,4 +8,7 @@ function add(a, b) {
   return a + b;
 }
 
-// TODO
+parentPort.on("message", ({a, b}) => {
+  parentPort.postMessage(add(a, b))
+  parentPort.close();
+})
